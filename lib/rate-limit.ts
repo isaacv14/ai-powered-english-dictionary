@@ -37,7 +37,7 @@ export async function checkRateLimit(ip: string): Promise<{ allowed: boolean; re
     return { allowed: false, retryAfter: 60 };
   }
 
-  await supabase.from("rate_limits").insert({ ip_address: ip });
+  await supabase.from("rate_limits").insert({ ip_address: ip } as never);
 
   return { allowed: true, retryAfter: 0 };
 }
