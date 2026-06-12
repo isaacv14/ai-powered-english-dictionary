@@ -6,7 +6,7 @@ import { isBlocklisted } from "@/lib/constants/blocklist";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { getWordBySlug, insertWord } from "@/lib/supabase-queries";
 
-const MODEL = "gemini-2.5-flash";
+const MODEL = "gemini-3.5-flash";
 
 export async function GET(
   _request: NextRequest,
@@ -57,7 +57,16 @@ export async function GET(
     );
   }
 
-  const rawResponse = await generateDefinition(normalizedSlug);
+  let rawResponse: string;
+  try {
+    rawResponse = await generateDefinition(normalizedSlug);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown AI error";
+    return Response.json(
+      { error: "ai_error", message },
+      { status: 502 }
+    );
+  }
 
   const cleanJson = rawResponse
     .replace(/^```(?:json)?\s*/i, "")

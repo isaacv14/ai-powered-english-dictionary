@@ -25,9 +25,14 @@ export async function getWordBySlug(slug: string): Promise<WordEntry | null> {
     .from("words")
     .select("id, slug, word, source, created_at")
     .eq("slug", slug)
-    .single<DbWord>();
+    .maybeSingle<DbWord>();
 
-  if (error || !word) {
+  if (error) {
+    console.error("getWordBySlug error:", error.message);
+    return null;
+  }
+
+  if (!word) {
     return null;
   }
 
@@ -70,6 +75,7 @@ export async function insertWord(
     .single<DbWord>();
 
   if (wordError || !wordRow) {
+    console.error("insertWord word error:", wordError?.message ?? wordError);
     return null;
   }
 
@@ -87,6 +93,7 @@ export async function insertWord(
     .insert(sensesRows as never);
 
   if (sensesError) {
+    console.error("insertWord senses error:", sensesError.message);
     return null;
   }
 
