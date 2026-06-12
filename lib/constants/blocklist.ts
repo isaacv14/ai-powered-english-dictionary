@@ -17,13 +17,6 @@ const BLOCKED_TERMS = [
   "damn",
   "crap",
 
-  // Racist/discriminatory slurs (non-exhaustive, just placeholder examples)
-  // These are listed by category to signal intent, but real implementation
-  // would need comprehensive list from content team
-  "racial slurs placeholder",
-  "ethnic slurs placeholder",
-  "homophobic slurs placeholder",
-
   // Spam/nonsense patterns
   "aaaa",
   "zzzz",
