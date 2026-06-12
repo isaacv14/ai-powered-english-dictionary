@@ -6,7 +6,7 @@ import { isBlocklisted } from "@/lib/constants/blocklist";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { getWordBySlug, insertWord } from "@/lib/supabase-queries";
 
-const MODEL = "gemini-2.0-flash";
+const MODEL = "gemini-2.5-flash";
 
 export async function GET(
   _request: NextRequest,
