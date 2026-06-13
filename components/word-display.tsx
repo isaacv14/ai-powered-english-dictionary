@@ -6,6 +6,7 @@ import type { WordEntry } from "@/lib/types";
 import { generateSynonymLinks } from "@/lib/utils/synonyms";
 import { fetchWordWithMockFallback } from "@/lib/api";
 import SearchBar from "@/components/search-bar";
+import { useSpeechSynthesis } from "@/hooks/use-speech-synthesis";
 
 type PageState =
   | { status: "loading" }
@@ -85,12 +86,41 @@ function LoadingState({ slug }: { slug: string }) {
 }
 
 function WordDisplay({ data }: { data: WordEntry }) {
+  const { speak, cancel, isSpeaking, isSupported } = useSpeechSynthesis();
+
+  function handlePlay() {
+    if (isSpeaking) {
+      cancel();
+    } else {
+      speak(data.word);
+    }
+  }
+
   return (
     <article>
       <header className="mb-8">
-        <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-100">
-          {data.word}
-        </h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-100">
+            {data.word}
+          </h1>
+          {isSupported && (
+            <button
+              onClick={handlePlay}
+              aria-label={isSpeaking ? "Stop pronunciation" : "Listen to pronunciation"}
+              className="shrink-0 p-2 rounded-full bg-zinc-100 text-zinc-600 hover:bg-blue-100 hover:text-blue-600 transition dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-blue-900 dark:hover:text-blue-300"
+            >
+              {isSpeaking ? (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                  <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM17.78 9.22a.75.75 0 10-1.06 1.06 2.25 2.25 0 010 3.44.75.75 0 001.06 1.06 3.75 3.75 0 000-5.56zM19.95 6.05a.75.75 0 10-1.06 1.06 5.25 5.25 0 010 7.78.75.75 0 101.06 1.06 6.75 6.75 0 000-9.9z" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                  <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06z" />
+                </svg>
+              )}
+            </button>
+          )}
+        </div>
       </header>
 
       {data.senses.map((sense, i) => (
