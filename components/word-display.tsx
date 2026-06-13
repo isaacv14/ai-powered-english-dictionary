@@ -88,7 +88,7 @@ function LoadingState({ slug }: { slug: string }) {
 function WordDisplay({ data }: { data: WordEntry }) {
   const { speak, cancel, isSpeaking, isSupported } = useSpeechSynthesis();
   const [rateIndex, setRateIndex] = useState(0);
-  const rates = [0.85, 0.7];
+  const rates = [0.85, 0.5];
 
   function handlePlay() {
     if (isSpeaking) {
