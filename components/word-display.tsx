@@ -87,12 +87,15 @@ function LoadingState({ slug }: { slug: string }) {
 
 function WordDisplay({ data }: { data: WordEntry }) {
   const { speak, cancel, isSpeaking, isSupported } = useSpeechSynthesis();
+  const [rateIndex, setRateIndex] = useState(0);
+  const rates = [0.85, 0.7];
 
   function handlePlay() {
     if (isSpeaking) {
       cancel();
     } else {
-      speak(data.word);
+      speak(data.word, rates[rateIndex]);
+      setRateIndex((prev) => (prev + 1) % rates.length);
     }
   }
 
